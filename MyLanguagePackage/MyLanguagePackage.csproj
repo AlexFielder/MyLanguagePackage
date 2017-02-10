@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="MyLanguagePackagePackage.cs" />
     <Compile Include="MyLanguageService.cs" />
+    <Compile Include="MySource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
