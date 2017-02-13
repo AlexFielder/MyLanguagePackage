@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="ILexer.cs" />
     <Compile Include="Lexer.cs" />
+    <Compile Include="MyGetClassNameExpansionFunction.cs" />
     <Compile Include="MyLanguagePackageEditorClassifier.cs" />
     <Compile Include="MyLanguagePackageEditorClassifierClassificationDefinition.cs" />
     <Compile Include="MyLanguagePackageEditorClassifierFormat.cs" />

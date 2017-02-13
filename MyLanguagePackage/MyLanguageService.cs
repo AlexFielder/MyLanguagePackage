@@ -10,11 +10,48 @@ using Microsoft.VisualStudio.OLE.Interop;
 using System.Runtime.InteropServices;
 using System.Collections;
 using Microsoft.VisualStudio.Shell;
+using System.IO;
 
 namespace MyLanguagePackage
 {
     class MyLanguageService : LanguageService
     {
+        Parser parser = new Parser();
+        //Source source = GetSource(req.FullName);
+        public override ExpansionFunction CreateExpansionFunction(ExpansionProvider provider,
+                                                                  string functionName)
+        {
+            ExpansionFunction function = null;
+            if (String.Compare(functionName, "GetClassName", true) == 0)
+            {
+                function = new MyGetClassNameExpansionFunction(provider);
+            }
+            else if (String.Compare(functionName, "EnumAccessType", true) == 0)
+            {
+                function = new MyEnumAccessTypeExpansionFunction(provider);
+            }
+            return function;
+        }
+        private Source GetSource(object fileName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override AuthoringScope ParseSource(ParseRequest req)
+        {
+            if (req.Sink.BraceMatching)
+            {
+                if (req.Reason == ParseReason.MatchBraces)
+                {
+                    foreach (TextSpan[] brace in parser.Braces)
+                    {
+                        req.Sink.MatchPair(brace[0], brace[1], 1);
+                    }
+                }
+            }
+            return new TestAuthoringScope();
+        }
+
         public override string Name
         {
             get
@@ -38,10 +75,11 @@ namespace MyLanguagePackage
             throw new NotImplementedException();
         }
 
-        public override AuthoringScope ParseSource(ParseRequest req)
-        {
-            return new TestAuthoringScope();
-        }
+        //public override AuthoringScope ParseSource(ParseRequest req)
+        //{
+        //    return new TestAuthoringScope();
+        //}
+
         //added by AF 2017-02-13 - doesn't work!
         //private ColorableItem[] m_colorableItems;
 
@@ -78,6 +116,7 @@ namespace MyLanguagePackage
         #region Snippets
 
         private ArrayList expansionsList;
+        private static FileInfo req;
 
         public override void OnParseComplete(ParseRequest req)
         {
